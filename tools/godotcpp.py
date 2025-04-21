@@ -321,6 +321,14 @@ def options(opts, env):
     )
 
     opts.Add(
+        BoolVariable(
+            key="vsproj",
+            help="Generate a Visual Studio solution",
+            default=env.get("vsproj", False),
+        )
+    )
+
+    opts.Add(
         PathVariable(
             "build_profile",
             "Path to a file containing a feature build profile",
@@ -555,8 +563,9 @@ def _godot_cpp(env):
         # Add compiledb if the option is set
         if env.get("compiledb", False):
             default_args += ["compiledb"]
-
-        env.Default(*default_args)
+        
+        if not env["vsproj"]:
+            env.Default(*default_args)
 
     env.AppendUnique(LIBS=[env.File("bin/%s" % library_name)])
     return library
