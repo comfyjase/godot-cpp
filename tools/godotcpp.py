@@ -563,7 +563,7 @@ def _godot_cpp(env):
         # Add compiledb if the option is set
         if env.get("compiledb", False):
             default_args += ["compiledb"]
-        
+
         if not env["vsproj"]:
             env.Default(*default_args)
 
