@@ -189,6 +189,10 @@ def _build_static_lib_with_rsp(target, source, env):
     return None
 
 
+def _build_library_using_rsp(env):
+    return platform.system().lower() == "linux" or env.get("use_mingw", False)
+
+
 platforms = ["linux", "macos", "windows", "android", "ios", "web"]
 
 # CPU architecture options.
@@ -551,7 +555,7 @@ def generate(env):
             "GodotCPPDocData": Builder(action=scons_generate_doc_source),
         }
     )
-    if env["platform"] == "linux" or env.get("use_mingw", False):
+    if _build_library_using_rsp(env):
         env.Append(
             BUILDERS={"GodotStaticLibRspBuilder": Builder(action=Action(_build_static_lib_with_rsp, "$ARCOMSTR"))}
         )
@@ -599,7 +603,7 @@ def _godot_cpp(env):
     library_name = "libgodot-cpp" + env["suffix"] + env["LIBSUFFIX"]
 
     if env["build_library"]:
-        if env["platform"] == "linux" or env.get("use_mingw", False):
+        if _build_library_using_rsp(env):
             # Use a custom builder to aggregate object files into a static library using a temporary response file.
             # This avoids hitting the shell argument limit.
             library = env.GodotStaticLibRspBuilder(target=env.File("bin/%s" % library_name), source=env.Object(sources))
