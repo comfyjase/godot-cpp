@@ -190,7 +190,7 @@ def _build_static_lib_with_rsp(target, source, env):
 
 
 def _build_library_using_rsp(env):
-    return platform.system().lower() == "linux" or env.get("use_mingw", False)
+    return platform.system().lower() == "linux"
 
 
 platforms = ["linux", "macos", "windows", "android", "ios", "web"]
